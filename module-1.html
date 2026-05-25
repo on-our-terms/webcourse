@@ -293,7 +293,7 @@
 
   <p>Even though our modern societies often protect us from many of the deadly threats our ancestors used to face every day, the reality is that your brain and body are still fundamentally built to ensure your survival in a dangerous and unpredictable environment.</p>
 
-  <p>You come naturally equipped with some fascinating, highly responsive biological systems designed to keep you alive. A variety of subdisciplines within the biological sciences (such as neuroscience and endocrinology) have done a great job helping us understand what these systems are and how they work.</p>
+  <p>You come naturally equipped with some fascinating, highly responsive biological systems designed to keep you alive. A variety of subdisciplines within the biological sciences — such as neuroscience and endocrinology — have done a great job helping us understand what these systems are and how they work.</p>
 
   <p>But researchers in labs aren't the only ones paying attention: companies who build the technology we use every day are translating findings from the same science to actively run behavioral experiments on us as their users, and get the most out of our engagement. Now they know exactly what buttons to push in you, so you keep pushing buttons for them.</p>
 
@@ -315,7 +315,11 @@
 
       <p>Social media platforms regularly use similar principles to promote sustained user engagement. One of the most direct ways they do this is through a mechanism called <strong>intermittent variable reinforcement</strong> — the exact same feature that makes slot machines so hard to walk away from. In both cases, the set up is identical: you're repeatedly pairing the same output (pulling a lever, swiping a finger) with just enough reward to keep you coming back, never so much that you leave feeling ultimately satisfied.</p>
 
-      <p>Remember that, when you're scrolling a feed, you can't know ahead of time exactly what the next post will be. You hope it'll be something meaningful, relatable, or interesting. But the reality is that it could just as easily be something boring, or something that makes you feel anxious or angry. The underlying reality is that it will often strategically include all of these: sometimes the emotional whiplash will be obvious, other times it will be subtle to the point of being borderline undetectable. But rest assured, it's still very much personally tailored.</p>
+      <p>Remember that, when you're scrolling a feed, you can't know ahead of time exactly what the next post will be. You hope it'll be something meaningful, relatable, or interesting — but it could just as easily be something boring, something that makes you feel anxious or angry. The underlying reality is that it will often strategically include all of these: sometimes the emotional whiplash will be obvious, other times it will be subtle to the point of being borderline undetectable. But rest assured, it's still very much personally tailored.</p>
+
+      <p>Have you ever noticed that, even when you think you've built a nice, home-grown feed from the ground up — followed the right creators, liked the right content, scrolled past fast enough on topics you didn't want to see more of — an algorithm will still occasionally throw "curve balls" and show you content that doesn't feel like it belongs? That's actually an intentional engagement tactic. One that's also sometimes used to "test" your openness to more extreme forms of content, which algorithms will often try to nudge you toward if you're not paying attention.</p>
+
+      <p>Notification systems also tend to use intermittent variable reinforcement wherever they can: is that actually a message from someone you care about, or just spam? There's only one way to find out: eyes on the screen.</p>
 
       <p>Another way that your dopamine is used to keep you chronically online is through <strong>A/B Testing</strong> — the kind of behavioral experimentation you probably had no idea you'd be a part of when you signed up for social media, but likely have been subject to more than a few times by now. It involves creating small variations of platform or content features, then testing them on different user groups to isolate what specific variables are driving the most engagement. These variations can include anything from the color of a notification, to video length, to the exact wording used in titles or captions.</p>
 
@@ -354,13 +358,13 @@
     <div class="science-card sleep">
       <div class="card-tag">Melatonin + Cognitive Arousal · Sleep Disruption</div>
       <span class="card-emoji">🌙</span>
-      <h3>A Perfect Recipe for a Disrupted Night's Sleep</h3>
+      <h3>A Perfect Recipe for a Dysregulated Night's Sleep</h3>
 
       <p>You've probably heard that blue light suppresses melatonin and delays sleep. Maybe you've tried to compensate for this with dark mode, warm-tone filters, or reduced brightness at night. You might have even gotten a pair of blue light filter glasses at one point — which have unfortunately been shown to provide minimal to no benefit for reducing digital eye strain or meaningfully improving sleep.</p>
 
       <p>But there's another, more significant contributor to sleep issues that's generally talked about less often, probably because it's harder to avoid: <strong>cognitive arousal</strong>. It's the exact reason why we hear we should "avoid screens for at least one hour before going to bed."</p>
 
-      <p>In previous sections, we outlined some of the ways that your biology is systematically activated by using tech. Putting the phone down doesn't mean you can simply switch those systems off. Your nervous system needs time to wind down from the stimulation it's been exposed to, and that process takes longer than most people realize. Good sleep hygiene might be "foundational" to our wellbeing, but it's not straightforward: we need to have the information to know what promotes and what inhibits healthy sleep patterns, and the skills are resources to actually act on them. This all further obscured by a culture that inherently deprioritizes the value of rest, and grossly over-emphasizes how much attention we should be putting into screetime. </p>
+      <p>In previous sections, we outlined some of the ways that your biology is systematically activated by using tech. Putting the phone down doesn't mean you can simply switch those systems off — your nervous system needs time to wind down from the stimulation it's been exposed to, and that process takes longer than most people realize.</p>
     </div>
 
     <!-- CARD 4: ATTENTION -->
@@ -375,7 +379,7 @@
         <strong>A note:</strong> a lack of focus can also be a symptom of a variety of medical, psychiatric, and developmental conditions. If it's seriously affecting your life, it's worth talking to a qualified medical professional to rule out any underlying health issues.
       </div>
 
-      <p>The problem is, our ability to pay attention is a necessary part of our ability to read through things carefully, and to understand what we're saying "yes" to when we check the notorious "I agree" box every time we create a new account or download a new app.</p>
+      <p>The problem is, our ability to pay attention is a necessary part of our ability to read through things carefully — and to understand what we're saying "yes" to when we check the notorious "I agree" box every time we create a new account or download a new app.</p>
 
       <p>When our capacity for sustained attention has become systematically eroded through prolonged exposure to ultra-processed, short-form content optimized for maximum stimulation per second, it's not only our brains that are being manipulated into structural change: our close social relationships, communities, and larger culture are all being reshaped alongside us.</p>
 
@@ -695,6 +699,27 @@
     if (scrollEvts % 2 === 0) triggerNextEvent();
   });
 
+  function pullCurtain() {
+    document.getElementById('curtainReveal').classList.add('show');
+    document.getElementById('leaveWith').style.display = 'block';
+    setTimeout(() => document.getElementById('curtainReveal').scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+  }
+
+  updateMeters();
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        if (e.target.id === 'bar2004') {
+          setTimeout(() => { document.getElementById('bar2004').style.width = '100%'; }, 300);
+          setTimeout(() => { document.getElementById('barNow').style.width = '31%'; }, 500);
+        }
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal, .science-card').forEach(el => io.observe(el));
 </script>
 </body>
 </html>
