@@ -694,28 +694,3 @@
     document.getElementById('scrollCount').textContent = scrollEvts;
     if (scrollEvts % 2 === 0) triggerNextEvent();
   });
-
-  function pullCurtain() {
-    document.getElementById('curtainReveal').classList.add('show');
-    document.getElementById('leaveWith').style.display = 'block';
-    setTimeout(() => document.getElementById('curtainReveal').scrollIntoView({ behavior:'smooth', block:'start' }), 100);
-  }
-
-  updateMeters();
-
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        if (e.target.id === 'bar2004') {
-          setTimeout(() => { document.getElementById('bar2004').style.width = '100%'; }, 300);
-          setTimeout(() => { document.getElementById('barNow').style.width = '31%'; }, 500);
-        }
-      }
-    });
-  }, { threshold: 0.15 });
-
-  document.querySelectorAll('.reveal, .science-card').forEach(el => io.observe(el));
-</script>
-</body>
-</html>
