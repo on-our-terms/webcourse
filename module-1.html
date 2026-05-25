@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>On Our Terms — Module 01: Your Body on the Algorithm</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --border: #1e1e2e;
+    --accent: #f5c542;
+    --accent2: #ff6b6b;
+    --accent3: #6bffc8;
+    --accent4: #a78bfa;
+    --text: #e8e8f0;
+    --muted: #6b6b8a;
+    --card: #16161f;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; z-index: 100; opacity: 0.4; }
+
+  .nav { padding: 1.5rem 2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(10,10,15,0.95); backdrop-filter: blur(10px); z-index: 50; }
+  .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 0.85rem; letter-spacing: 0.05em; color: var(--accent); text-decoration: none; }
+  .nav-mission { font-size: 0.6rem; letter-spacing: 0.15em; color: var(--muted); }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding: 4rem 2rem 2rem; position: relative; overflow: hidden; max-width: 720px; margin: 0 auto; }
+  .hero::after { content: ''; position: absolute; top: -30%; right: -30%; width: 600px; height: 600px; background: radial-gradient(circle, rgba(255,107,107,0.07) 0%, transparent 70%); pointer-events: none; }
+  .module-tag { font-size: 0.65rem; letter-spacing: 0.3em; color: var(--accent2); border: 1px solid var(--accent2); display: inline-block; padding: 0.3rem 0.8rem; margin-bottom: 2rem; animation: fadeUp 0.6s ease both; }
+  .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.8rem, 10vw, 6rem); font-weight: 800; line-height: 0.95; letter-spacing: -0.03em; margin-bottom: 1.5rem; animation: fadeUp 0.6s ease 0.1s both; }
+  .hero h1 em { font-style: normal; color: var(--accent2); }
+  .hero-sub { font-size: 0.85rem; line-height: 1.9; color: var(--muted); max-width: 500px; animation: fadeUp 0.6s ease 0.2s both; margin-bottom: 3rem; }
+  .course-map { margin: 2rem 0 3rem; animation: fadeUp 0.6s ease 0.2s both; }
+  .map-label { font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); margin-bottom: 1.5rem; }
+  .map-nodes { display: flex; align-items: flex-start; gap: 0; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 0.5rem; scrollbar-width: none; }
+  .map-nodes::-webkit-scrollbar { display: none; }
+  .map-connector { width: 24px; height: 1px; background: var(--border); flex-shrink: 0; margin-top: 5px; }
+  .map-node { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; position: relative; }
+  .map-dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--muted); background: transparent; margin-bottom: 0.6rem; flex-shrink: 0; transition: all 0.2s; }
+  .map-node.done .map-dot { background: var(--muted); border-color: var(--muted); }
+  .map-node.active .map-dot { background: var(--accent2); border-color: var(--accent2); box-shadow: 0 0 8px rgba(255,107,107,0.5); }
+  .map-node-text { font-size: 0.55rem; line-height: 1.4; color: var(--muted); text-align: center; max-width: 56px; }
+  .map-node-text span { color: var(--muted); opacity: 0.7; }
+  .map-node.active .map-node-text { color: var(--accent2); }
+  .map-node.active .map-node-text span { color: var(--accent2); opacity: 1; }
+  .map-node.done .map-node-text { opacity: 0.5; }
+  .map-you { font-size: 0.5rem; letter-spacing: 0.1em; color: var(--accent2); margin-top: 0.4rem; white-space: nowrap; opacity: 0.8; }
+
+  .scroll-cta { font-size: 0.7rem; letter-spacing: 0.2em; color: var(--muted); animation: fadeUp 0.6s ease 0.4s both; display: flex; align-items: center; gap: 0.75rem; }
+  .scroll-line { width: 40px; height: 1px; background: var(--muted); }
+
+  .section { padding: 5rem 2rem; max-width: 720px; margin: 0 auto; }
+  .section-label { font-size: 0.65rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--accent2); margin-bottom: 1.5rem; }
+  h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 5vw, 2.6rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; letter-spacing: -0.02em; }
+  h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); }
+  p { font-size: 0.85rem; line-height: 1.9; color: var(--muted); margin-bottom: 1.2rem; }
+  p strong { color: var(--text); }
+  p em { color: var(--text); font-style: italic; }
+  .divider { width: 100%; height: 1px; background: var(--border); max-width: 720px; margin: 0 auto; }
+
+  .science-stack { display: flex; flex-direction: column; gap: 1.5rem; margin: 3rem 0; }
+  .science-card { background: var(--card); border: 1px solid var(--border); padding: 2rem; position: relative; overflow: hidden; opacity: 0; transform: translateY(20px); transition: all 0.5s ease; }
+  .science-card.visible { opacity: 1; transform: translateY(0); }
+  .science-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; }
+  .science-card.dopamine::before { background: var(--accent); }
+  .science-card.cortisol::before { background: var(--accent2); }
+  .science-card.sleep::before { background: var(--accent4); }
+  .science-card.attention::before { background: var(--accent3); }
+  .science-card.punchline::before { background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent4)); }
+  .card-emoji { font-size: 2rem; margin-bottom: 1rem; display: block; }
+  .card-tag { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem; opacity: 0.7; }
+  .dopamine .card-tag { color: var(--accent); }
+  .cortisol .card-tag { color: var(--accent2); }
+  .sleep .card-tag { color: var(--accent4); }
+  .attention .card-tag { color: var(--accent3); }
+  .punchline .card-tag { color: var(--text); }
+
+  .disclaimer-bubble { background: rgba(167,139,250,0.07); border: 1px solid rgba(167,139,250,0.2); padding: 1rem 1.25rem; margin: 1rem 0; font-size: 0.75rem; line-height: 1.7; color: var(--muted); font-style: italic; }
+  .disclaimer-bubble strong { color: var(--accent4); font-style: normal; }
+
+  .ab-examples { margin: 1.5rem 0; border: 1px solid var(--border); }
+  .ab-example { padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 0.78rem; line-height: 1.7; color: var(--muted); }
+  .ab-example:last-child { border-bottom: none; }
+  .ab-example strong { color: var(--text); display: block; margin-bottom: 0.2rem; }
+
+  .pullquote { border-left: 2px solid var(--accent2); padding-left: 1.25rem; margin: 1.5rem 0; font-style: italic; color: var(--text); font-size: 0.88rem; line-height: 1.8; }
+
+  .attention-bar-wrap { margin: 1rem 0; }
+  .bar-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 0.4rem; display: flex; justify-content: space-between; }
+  .bar-track { height: 8px; background: var(--border); overflow: hidden; }
+  .bar-fill { height: 100%; width: 0%; transition: width 1.5s ease; }
+  .bar-fill.green { background: var(--accent3); }
+  .bar-fill.red { background: var(--accent2); }
+
+  /* FEED SIMULATION */
+  .feed-section { padding: 5rem 2rem; max-width: 720px; margin: 0 auto; }
+  .feed-intro { margin-bottom: 3rem; }
+  .feed-container { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+  @media (max-width: 600px) { .feed-container { grid-template-columns: 1fr; } }
+
+  .phone-wrap { display: flex; flex-direction: column; align-items: center; }
+  .phone { width: 220px; background: #1a1a2e; border: 2px solid #2a2a4a; border-radius: 32px; padding: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .phone-notch { width: 60px; height: 8px; background: #0a0a15; border-radius: 4px; margin: 0 auto 8px; }
+  .phone-screen { background: #0d0d1a; border-radius: 20px; height: 380px; overflow: hidden; }
+  .feed-scroll { height: 100%; overflow-y: auto; scroll-behavior: smooth; scrollbar-width: none; }
+  .feed-scroll::-webkit-scrollbar { display: none; }
+  .feed-post { background: #111122; border-bottom: 1px solid #1a1a35; padding: 10px; cursor: pointer; transition: background 0.15s; }
+  .feed-post:hover { background: #161628; }
+  .post-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .post-avatar { width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
+  .post-name { font-size: 9px; font-weight: 700; color: #e0e0f0; font-family: 'Syne', sans-serif; }
+  .post-time { font-size: 8px; color: #4a4a6a; }
+  .post-content { font-size: 9px; line-height: 1.5; color: #b0b0c8; margin-bottom: 6px; }
+  .post-image { width: 100%; height: 70px; border-radius: 6px; margin-bottom: 6px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .post-actions { display: flex; gap: 10px; }
+  .post-action { font-size: 8px; color: #4a4a6a; cursor: pointer; transition: color 0.15s; display: flex; align-items: center; gap: 3px; padding: 3px 0; background: none; border: none; font-family: 'Space Mono', monospace; }
+  .post-action:hover { color: #e0e0f0; }
+  .post-action.liked { color: #ff6b6b; }
+  .post-action.shared { color: #6bffc8; }
+  .scroll-prompt { text-align: center; padding: 1rem; font-size: 8px; color: #2a2a4a; letter-spacing: 0.1em; }
+
+  .brain-panel {}
+  .brain-label { font-size: 0.65rem; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 1rem; text-transform: uppercase; }
+  .brain-meter { margin-bottom: 1.2rem; }
+  .meter-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; }
+  .meter-name { font-size: 0.7rem; color: var(--text); font-family: 'Syne', sans-serif; font-weight: 700; }
+  .meter-value { font-size: 0.7rem; font-family: 'Syne', sans-serif; font-weight: 700; }
+  .meter-track { height: 6px; background: var(--border); overflow: hidden; }
+  .meter-fill { height: 100%; width: 0%; transition: width 0.8s ease; }
+  .meter-fill.cortisol-fill { background: var(--accent2); }
+  .meter-fill.dopamine-fill { background: var(--accent); }
+  .meter-fill.attention-fill { background: var(--accent3); }
+  .meter-fill.stress-fill { background: var(--accent4); }
+  .cortisol-val { color: var(--accent2); }
+  .dopamine-val { color: var(--accent); }
+  .attention-val { color: var(--accent3); }
+  .stress-val { color: var(--accent4); }
+
+  .brain-event { background: var(--card); border: 1px solid var(--border); border-left: 2px solid var(--accent2); padding: 0.75rem; margin-bottom: 0.6rem; font-size: 0.72rem; line-height: 1.5; color: var(--muted); opacity: 0; transform: translateX(-8px); transition: all 0.4s ease; min-height: 44px; }
+  .brain-event.show { opacity: 1; transform: translateX(0); }
+  .brain-event.dopamine-event { border-left-color: var(--accent); }
+  .brain-event.attention-event { border-left-color: var(--accent3); }
+  .brain-event strong { color: var(--text); }
+
+  .curtain-btn { width: 100%; background: var(--accent2); color: #fff; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.05em; padding: 1rem; border: none; cursor: pointer; transition: all 0.2s; margin-top: 1rem; display: none; }
+  .curtain-btn.show { display: block; }
+  .curtain-btn:hover { opacity: 0.85; }
+  .interaction-count { font-family: 'Syne', sans-serif; font-size: 0.65rem; color: var(--muted); text-align: center; margin-top: 0.75rem; letter-spacing: 0.08em; }
+  .interaction-count span { color: var(--accent2); font-weight: 700; }
+
+  .reveal-section { display: none; padding: 5rem 2rem; max-width: 720px; margin: 0 auto; }
+  .reveal-section.show { display: block; }
+  .reveal-callout { background: var(--surface); border: 1px solid var(--border); padding: 2.5rem; margin: 2rem 0; position: relative; }
+  .reveal-callout::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent4), var(--accent3)); }
+  .mechanism-list { list-style: none; margin: 1.5rem 0; }
+  .mechanism-list li { display: flex; gap: 1rem; padding: 0.75rem 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; line-height: 1.6; color: var(--muted); }
+  .mechanism-list li:last-child { border-bottom: none; }
+  .mech-icon { font-size: 1rem; flex-shrink: 0; width: 20px; }
+  .mech-text strong { color: var(--text); }
+
+  .leave-section { padding: 5rem 2rem; max-width: 720px; margin: 0 auto; }
+  .wallpaper-card { background: linear-gradient(135deg, #0d0d1f 0%, #1a0a1f 50%, #0a1020 100%); border: 1px solid var(--border); padding: 2.5rem; position: relative; overflow: hidden; margin: 2rem 0; }
+  .wallpaper-card::before { content: ''; position: absolute; top: -50%; right: -20%; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,107,107,0.1) 0%, transparent 70%); }
+  .wallpaper-title { font-family: 'Syne', sans-serif; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.3em; color: var(--accent); margin-bottom: 1.5rem; }
+  .chain { display: flex; flex-direction: column; gap: 0; position: relative; z-index: 1; }
+  .chain-item { display: flex; align-items: flex-start; gap: 1rem; }
+  .chain-left { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; width: 24px; }
+  .chain-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .chain-line { width: 1px; flex: 1; min-height: 28px; background: var(--border); margin: 4px 0; }
+  .chain-content { padding-bottom: 1.5rem; flex: 1; }
+  .chain-label { font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 700; margin-bottom: 0.2rem; }
+  .chain-desc { font-size: 0.72rem; line-height: 1.5; color: var(--muted); }
+  .chain-item:nth-child(1) .chain-dot { background: var(--accent2); }
+  .chain-item:nth-child(1) .chain-label { color: var(--accent2); }
+  .chain-item:nth-child(2) .chain-dot { background: var(--accent); }
+  .chain-item:nth-child(2) .chain-label { color: var(--accent); }
+  .chain-item:nth-child(3) .chain-dot { background: var(--accent4); }
+  .chain-item:nth-child(3) .chain-label { color: var(--accent4); }
+  .chain-item:nth-child(4) .chain-dot { background: var(--accent3); }
+  .chain-item:nth-child(4) .chain-label { color: var(--accent3); }
+  .chain-item:nth-child(5) .chain-dot { background: #fff; }
+  .chain-item:nth-child(5) .chain-label { color: #fff; }
+
+  .two-questions { background: var(--card); border: 1px solid var(--border); padding: 2rem; margin: 2rem 0; }
+  .question-prompt { font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; line-height: 1.4; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+  .question-prompt span { color: var(--accent); }
+  .question-prompt.after span { color: var(--accent3); }
+
+  .next-mission { background: var(--card); border: 1px solid var(--border); padding: 2.5rem; text-align: center; margin-top: 3rem; position: relative; overflow: hidden; }
+  .next-mission::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--accent); }
+  .next-label { font-size: 0.65rem; letter-spacing: 0.3em; color: var(--muted); margin-bottom: 0.75rem; }
+  .next-title { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem; }
+  .next-title span { color: var(--accent); }
+  .next-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .next-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent); color: var(--bg); font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem; padding: 0.9rem 2rem; border: none; cursor: pointer; transition: all 0.2s; text-decoration: none; letter-spacing: 0.05em; }
+  .next-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  .disclaimer { max-width: 720px; margin: 0 auto; padding: 2rem; font-size: 0.7rem; color: var(--muted); line-height: 1.7; border-top: 1px solid var(--border); }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .reveal { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="module-0.html" class="nav-logo">On Our Terms</a>
+  <span class="nav-mission">MODULE 01 · YOUR BODY ON THE ALGORITHM</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="module-tag">Module 01 · The Science</div>
+  <h1>Your body<br>on the<br><em>algorithm.</em></h1>
+  <div class="course-map">
+    <div class="map-label">The arc · 9 modules</div>
+    <div class="map-nodes">
+
+      <div class="map-node done">
+        <div class="map-dot"></div>
+        <div class="map-node-text">00<br><span>Where do<br>you stand?</span></div>
+      </div>
+      <div class="map-connector"></div>
+
+      <div class="map-node active">
+        <div class="map-dot"></div>
+        <div class="map-node-text">01<br><span>Your body<br>on the algorithm</span></div>
+        <div class="map-you">← you are here</div>
+      </div>
+      <div class="map-connector"></div>
+
+      <div class="map-node">
+        <div class="map-dot"></div>
+        <div class="map-node-text">02<br><span>This isn't<br>accidental</span></div>
+      </div>
+      <div class="map-connector"></div>
+
+      <div class="map-node">
+        <div class="map-dot"></div>
+        <div class="map-node-text">03<br><span>The metadata<br>garbage patch</span></div>
+      </div>
+      <div class="map-connector"></div>
+
+      <div class="map-node">
+        <div class="map-dot"></div>
+        <div class="map-node-text">04<br><span>Consent isn't<br>what you think</span></div>
+      </div>
+      <div class="map-connector"></div>
+
+      <div class="map-node">
+        <div class="map-dot"></div>
+        <div class="map-node-text">05<br><span>How to read<br>a ToS</span></div>
+      </div>
+      <div class="map-connector"></div>
+
+      <div class="map-node">
+        <div class="map-dot"></div>
+        <div class="map-node-text">06<br><span>Know your<br>data rights</span></div>
+      </div>
+      <div class="map-connector"></div>
+
+      <div class="map-node">
+        <div class="map-dot"></div>
+        <div class="map-node-text">07<br><span>When your data<br>leaves the platform</span></div>
+      </div>
+      <div class="map-connector"></div>
+
+      <div class="map-node">
+        <div class="map-dot"></div>
+        <div class="map-node-text">08<br><span>On your<br>terms</span></div>
+      </div>
+
+    </div>
+  </div>
+  <div class="scroll-cta"><div class="scroll-line"></div> scroll to find out</div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 1: THE BIOLOGY -->
+<section class="section">
+  <div class="section-label">The Biology</div>
+  <h2>You didn't evolve for this.</h2>
+
+  <p>You might've heard before that your brain is anatomically ancient. But how ancient are we talking, and why would that even matter for us today?</p>
+
+  <p>Through analyzing patterns in the size and shape of our ancestors' fossilized skulls, anthropologists currently estimate that the human brain became anatomically modern somewhere between 35,000 and 100,000 years ago. To put the more conservative of those estimates in perspective: we're talking about somewhere around the time your great 1,200x great-grandparents were alive.</p>
+
+  <p>Even though our modern societies often protect us from many of the deadly threats our ancestors used to face every day, the reality is that your brain and body are still fundamentally built to ensure your survival in a dangerous and unpredictable environment.</p>
+
+  <p>You come naturally equipped with some fascinating, highly responsive biological systems designed to keep you alive. A variety of subdisciplines within the biological sciences — such as neuroscience and endocrinology — have done a great job helping us understand what these systems are and how they work.</p>
+
+  <p>But researchers in labs aren't the only ones paying attention: companies who build the technology we use every day are translating findings from the same science to actively run behavioral experiments on us as their users, and get the most out of our engagement. Now they know exactly what buttons to push in you, so you keep pushing buttons for them.</p>
+
+  <p>So, while you might know you're just looking at a video on your phone's screen, your body doesn't actually know that. And while it might not seem like a big deal in the moment, the compounding effects of this on your health significantly add up over time.</p>
+
+  <div class="science-stack">
+
+    <!-- CARD 1: DOPAMINE -->
+    <div class="science-card dopamine">
+      <div class="card-tag">Dopamine · The Anticipation Chemical</div>
+      <span class="card-emoji">🎰</span>
+      <h3>The More Uncertain You Feel, The More Predictably You'll Stay</h3>
+
+      <p>Dopamine is often thought of as the "reward" chemical. But that's a bit of a misconception: the effects of dopamine aren't actually experienced when you successfully achieve a goal — they're activated when your brain thinks that something good might happen if you take action. And it's released in its highest concentrations when your brain associates high value with a potential reward, but isn't quite certain you'll actually get it.</p>
+
+      <p>In this way, dopamine relates more to how we <em>anticipate</em> the value of a reward than the reward itself, and its main job is to prime us with the motivation we require to act.</p>
+
+      <p>You can see this behavioral feedback loop illustrated very clearly in the way video games manufacture engagement. A well-designed game intentionally pushes right up against the edge of a player's skill level: by challenging them to a limit just below the threshold of difficulty that would make them prefer to quit, and letting them win in mostly predictable ways while inhabiting this narrow window, they produce just the right amount of value with the right amount of uncertainty that allows games to be experienced as continually rewarding — sometimes even to the point of clinical addiction. In fact, both ICD-11 and DSM-5 now formally recognize gaming-related and internet use disorders.</p>
+
+      <p>Social media platforms regularly use similar principles to promote sustained user engagement. One of the most direct ways they do this is through a mechanism called <strong>intermittent variable reinforcement</strong> — the exact same feature that makes slot machines so hard to walk away from. In both cases, the set up is identical: you're repeatedly pairing the same output (pulling a lever, swiping a finger) with just enough reward to keep you coming back, never so much that you leave feeling ultimately satisfied.</p>
+
+      <p>Remember that, when you're scrolling a feed, you can't know ahead of time exactly what the next post will be. You hope it'll be something meaningful, relatable, or interesting — but it could just as easily be something boring, something that makes you feel anxious or angry. The underlying reality is that it will often strategically include all of these: sometimes the emotional whiplash will be obvious, other times it will be subtle to the point of being borderline undetectable. But rest assured, it's still very much personally tailored.</p>
+
+      <p>Have you ever noticed that, even when you think you've built a nice, home-grown feed from the ground up — followed the right creators, liked the right content, scrolled past fast enough on topics you didn't want to see more of — an algorithm will still occasionally throw "curve balls" and show you content that doesn't feel like it belongs? That's actually an intentional engagement tactic. One that's also sometimes used to "test" your openness to more extreme forms of content, which algorithms will often try to nudge you toward if you're not paying attention.</p>
+
+      <p>Notification systems also tend to use intermittent variable reinforcement wherever they can: is that actually a message from someone you care about, or just spam? There's only one way to find out: eyes on the screen.</p>
+
+      <p>Another way that your dopamine is used to keep you chronically online is through <strong>A/B Testing</strong> — the kind of behavioral experimentation you probably had no idea you'd be a part of when you signed up for social media, but likely have been subject to more than a few times by now. It involves creating small variations of platform or content features, then testing them on different user groups to isolate what specific variables are driving the most engagement. These variations can include anything from the color of a notification, to video length, to the exact wording used in titles or captions.</p>
+
+      <div class="ab-examples">
+        <div class="ab-example">
+          <strong>Meta (Facebook &amp; Instagram)</strong>
+          Uses Meta Ads Manager to split-test ad creatives, audiences, and placements to optimize ad spend — meaning what you see is what performed best at keeping people like you engaged.
+        </div>
+        <div class="ab-example">
+          <strong>YouTube</strong>
+          Utilizes the YouTube A/B Test tool directly in YouTube Studio to test up to three different titles and thumbnails for the highest watch time. The thumbnail you see wasn't chosen for clarity — it was chosen because it made people click.
+        </div>
+      </div>
+
+      <p>More and more people are beginning to recognize and call out the addictive behavioral loops these tactics create. But the data that would allow independent researchers to fully study these effects is owned entirely by the platforms, and is currently protected as proprietary information and trade secrets. Accordingly, we're only beginning to understand the scale of this topic as an issue of public health.</p>
+    </div>
+
+    <!-- CARD 2: CORTISOL -->
+    <div class="science-card cortisol">
+      <div class="card-tag">Cortisol · The Stress Hormone</div>
+      <span class="card-emoji">⚡</span>
+      <h3>Why Ragebait and Fearmongering Always Work</h3>
+
+      <p>Cortisol is your body's primary stress hormone, produced by your adrenal glands. When paired with adrenaline, a spike of cortisol during moments of intense stress triggers what we call a "fight or flight" response. This raises your heart rate, releases a quick burst of sugar from your liver for energy, diverts blood flow to your arms and legs to improve short-term strength and speed, and can temporarily boost your immune system.</p>
+
+      <p>But cortisol isn't only for moments of extreme stress: our bodies produce it regularly, and that's actually a good thing. We need healthy cortisol levels in order to properly regulate our blood pressure, metabolism, and sleep/wake cycles. That said, having too much or too little cortisol over a long period of time is bad for your health. A chronic imbalance can negatively affect appetite, weight, blood sugar, blood pressure, inflammation, immune function, and even muscle and bone health.</p>
+
+      <p>When we understand that cortisol is both a powerful part of our survival response and a necessary part of our body's everyday functioning, it becomes clear how important it is that we take care to keep it in balance.</p>
+
+      <p>And yet, platforms know there are few more powerful hooks than triggering your body's built-in threat detection system. The way we process negative content appears to drive significantly more engagement than how we tend to interact with positive content, so algorithms trained to optimize for engagement end up promoting media that capitalizes on our anxieties and vulnerability to outrage.</p>
+
+      <p>Exposure to negative content has been shown to cause momentary spikes in cortisol, and may also contribute to chronically elevated cortisol levels over time — which can manifest as exhaustion, anxiety, racing thoughts, irritability, and brain fog.</p>
+    </div>
+
+    <!-- CARD 3: SLEEP -->
+    <div class="science-card sleep">
+      <div class="card-tag">Melatonin + Cognitive Arousal · Sleep Disruption</div>
+      <span class="card-emoji">🌙</span>
+      <h3>A Perfect Recipe for a Dysregulated Night's Sleep</h3>
+
+      <p>You've probably heard that blue light suppresses melatonin and delays sleep. Maybe you've tried to compensate for this with dark mode, warm-tone filters, or reduced brightness at night. You might have even gotten a pair of blue light filter glasses at one point — which have unfortunately been shown to provide minimal to no benefit for reducing digital eye strain or meaningfully improving sleep.</p>
+
+      <p>But there's another, more significant contributor to sleep issues that's generally talked about less often, probably because it's harder to avoid: <strong>cognitive arousal</strong>. It's the exact reason why we hear we should "avoid screens for at least one hour before going to bed."</p>
+
+      <p>In previous sections, we outlined some of the ways that your biology is systematically activated by using tech. Putting the phone down doesn't mean you can simply switch those systems off — your nervous system needs time to wind down from the stimulation it's been exposed to, and that process takes longer than most people realize.</p>
+    </div>
+
+    <!-- CARD 4: ATTENTION -->
+    <div class="science-card attention">
+      <div class="card-tag">The (Fragmented) Attention Economy</div>
+      <span class="card-emoji">🧠</span>
+      <h3>Your Focus is a Sacrifice They're Willing to Make</h3>
+
+      <p>If you're a regular smartphone user and you've been feeling like you can't seem to focus the way you used to, the factors described above are likely playing a role.</p>
+
+      <div class="disclaimer-bubble">
+        <strong>A note:</strong> a lack of focus can also be a symptom of a variety of medical, psychiatric, and developmental conditions. If it's seriously affecting your life, it's worth talking to a qualified medical professional to rule out any underlying health issues.
+      </div>
+
+      <p>The problem is, our ability to pay attention is a necessary part of our ability to read through things carefully — and to understand what we're saying "yes" to when we check the notorious "I agree" box every time we create a new account or download a new app.</p>
+
+      <p>When our capacity for sustained attention has become systematically eroded through prolonged exposure to ultra-processed, short-form content optimized for maximum stimulation per second, it's not only our brains that are being manipulated into structural change: our close social relationships, communities, and larger culture are all being reshaped alongside us.</p>
+
+      <div class="pullquote">The question is, is it really on our terms?</div>
+    </div>
+
+    <!-- CARD 5: THE ENDGAME -->
+    <div class="science-card punchline">
+      <div class="card-tag">Why All of This Matters</div>
+      <span class="card-emoji">🎯</span>
+      <h3>Under the Influence of Screentime</h3>
+
+      <p>I would like to take a brief moment to make something very clear: none of this is your fault. It didn't happen because you have a flawed personality of some sort, and it certainly isn't some kind of moral failure.</p>
+
+      <p>However, all of that has to be followed up with a very big "but":</p>
+
+      <p><strong>Your willingness to take personal responsibility for this situation is going to be the main thing that helps you improve it.</strong></p>
+
+      <p>And that's why we're here, right?</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FEED SIMULATION -->
+<section class="feed-section reveal">
+  <div class="feed-intro">
+    <div class="section-label">Interactive Component · Simulated Feed</div>
+    <h2>Scroll the feed.<br>Watch your brain.</h2>
+    <p>This is a simulated feed. Scroll through it, like something, keep going. Watch the panel on the right respond in real time. Then we'll pull back the curtain on what just happened.</p>
+  </div>
+
+  <div class="feed-container">
+    <div class="phone-wrap">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="feed-scroll" id="feedScroll">
+
+            <div class="feed-post">
+              <div class="post-header">
+                <div class="post-avatar" style="background:#2a1a3a;">😤</div>
+                <div>
+                  <div class="post-name">NewsAlert</div>
+                  <div class="post-time">2m ago</div>
+                </div>
+              </div>
+              <div class="post-content">BREAKING: New study shows your data has been sold to over 200 companies without your knowledge. Are you outraged?</div>
+              <div class="post-actions">
+                <button class="post-action" onclick="interact('like',1,this)">♥ <span>847</span></button>
+                <button class="post-action" onclick="interact('share',1,this)">↗ 312</button>
+              </div>
+            </div>
+
+            <div class="feed-post">
+              <div class="post-header">
+                <div class="post-avatar" style="background:#1a2a1a;">🐶</div>
+                <div>
+                  <div class="post-name">dailycuteness</div>
+                  <div class="post-time">5m ago</div>
+                </div>
+              </div>
+              <div class="post-image" style="background:#1a2a1a;">🐕</div>
+              <div class="post-content">Friday energy 🐾</div>
+              <div class="post-actions">
+                <button class="post-action" onclick="interact('like',2,this)">♥ <span>2.1k</span></button>
+                <button class="post-action" onclick="interact('share',2,this)">↗ 89</button>
+              </div>
+            </div>
+
+            <div class="feed-post">
+              <div class="post-header">
+                <div class="post-avatar" style="background:#2a1a1a;">🔥</div>
+                <div>
+                  <div class="post-name">TrendingNow</div>
+                  <div class="post-time">8m ago</div>
+                </div>
+              </div>
+              <div class="post-content">Everyone is talking about this. Why aren't you? The thing happening right now that you need to see before it's deleted.</div>
+              <div class="post-actions">
+                <button class="post-action" onclick="interact('like',3,this)">♥ <span>15.4k</span></button>
+                <button class="post-action" onclick="interact('share',3,this)">↗ 4.2k</button>
+              </div>
+            </div>
+
+            <div class="feed-post">
+              <div class="post-header">
+                <div class="post-avatar" style="background:#1a1a2a;">📊</div>
+                <div>
+                  <div class="post-name">DataWatch</div>
+                  <div class="post-time">12m ago</div>
+                </div>
+              </div>
+              <div class="post-content">Your phone tracked your location 847 times yesterday. Here's what that data is actually used for. 🧵</div>
+              <div class="post-actions">
+                <button class="post-action" onclick="interact('like',4,this)">♥ <span>5.6k</span></button>
+                <button class="post-action" onclick="interact('share',4,this)">↗ 891</button>
+              </div>
+            </div>
+
+            <div class="feed-post">
+              <div class="post-header">
+                <div class="post-avatar" style="background:#2a2a1a;">😂</div>
+                <div>
+                  <div class="post-name">memepage</div>
+                  <div class="post-time">15m ago</div>
+                </div>
+              </div>
+              <div class="post-image" style="background:#1f1f10;">😂</div>
+              <div class="post-content">me pretending to read the terms and conditions</div>
+              <div class="post-actions">
+                <button class="post-action" onclick="interact('like',5,this)">♥ <span>34.2k</span></button>
+                <button class="post-action" onclick="interact('share',5,this)">↗ 1.1k</button>
+              </div>
+            </div>
+
+            <div class="feed-post">
+              <div class="post-header">
+                <div class="post-avatar" style="background:#1a2a2a;">⚠️</div>
+                <div>
+                  <div class="post-name">PrivacyAlert</div>
+                  <div class="post-time">19m ago</div>
+                </div>
+              </div>
+              <div class="post-content">This app is listening to your conversations. We tested it. The results will make you delete it immediately.</div>
+              <div class="post-actions">
+                <button class="post-action" onclick="interact('like',6,this)">♥ <span>28.9k</span></button>
+                <button class="post-action" onclick="interact('share',6,this)">↗ 7.3k</button>
+              </div>
+            </div>
+
+            <div class="scroll-prompt">↓ keep scrolling</div>
+          </div>
+        </div>
+      </div>
+      <div class="interaction-count">interactions: <span id="interactCount">0</span> &nbsp;|&nbsp; scrolls: <span id="scrollCount">0</span></div>
+    </div>
+
+    <div class="brain-panel">
+      <div class="brain-label">What's happening in your brain</div>
+      <div class="brain-meter">
+        <div class="meter-header"><span class="meter-name">Cortisol</span><span class="meter-value cortisol-val" id="cortisolVal">baseline</span></div>
+        <div class="meter-track"><div class="meter-fill cortisol-fill" id="cortisolMeter"></div></div>
+      </div>
+      <div class="brain-meter">
+        <div class="meter-header"><span class="meter-name">Dopamine anticipation</span><span class="meter-value dopamine-val" id="dopamineVal">baseline</span></div>
+        <div class="meter-track"><div class="meter-fill dopamine-fill" id="dopamineMeter"></div></div>
+      </div>
+      <div class="brain-meter">
+        <div class="meter-header"><span class="meter-name">Sustained attention</span><span class="meter-value attention-val" id="attentionVal">100%</span></div>
+        <div class="meter-track"><div class="meter-fill attention-fill" id="attentionMeter" style="width:100%"></div></div>
+      </div>
+      <div class="brain-meter">
+        <div class="meter-header"><span class="meter-name">Nervous system activation</span><span class="meter-value stress-val" id="stressVal">low</span></div>
+        <div class="meter-track"><div class="meter-fill stress-fill" id="stressMeter"></div></div>
+      </div>
+      <div style="margin-top:1.5rem;">
+        <div class="brain-label">Live events</div>
+        <div class="brain-event" id="event0">Interact with the feed to see what happens...</div>
+        <div class="brain-event" id="event1"></div>
+        <div class="brain-event" id="event2"></div>
+      </div>
+      <button class="curtain-btn" id="curtainBtn" onclick="pullCurtain()">Pull back the curtain →</button>
+    </div>
+  </div>
+</section>
+
+<!-- CURTAIN REVEAL -->
+<div class="reveal-section" id="curtainReveal">
+  <div class="divider" style="margin-bottom:5rem;"></div>
+  <div class="section-label">The Reveal</div>
+  <h2>Every element of that feed<br>was designed.</h2>
+  <p>Not by accident. Not as a side effect. By people who understood exactly what it would do to your brain, and optimized for it.</p>
+
+  <div class="reveal-callout">
+    <ul class="mechanism-list">
+      <li><span class="mech-icon">⚡</span><span class="mech-text"><strong>Ragebait triggered your cortisol.</strong> Posts designed to provoke anger or fear activate your threat detection system. Your heart rate rose slightly. Your attention narrowed. You were drawn in to attend to a perceived threat — even knowing it was a simulation.</span></li>
+      <li><span class="mech-icon">🎰</span><span class="mech-text"><strong>The like count is a slot machine.</strong> When you interacted, your brain anticipated a reward. When you scrolled past without engaging, it wondered whether the next post might be more worth it. That wondering is your dopamine loop running exactly as designed.</span></li>
+      <li><span class="mech-icon">📜</span><span class="mech-text"><strong>Infinite scroll removed your stopping point.</strong> There was no natural end to that feed. Real feeds work the same way — the moment where you'd naturally pause and decide whether to continue has been deliberately engineered out of existence.</span></li>
+      <li><span class="mech-icon">🧠</span><span class="mech-text"><strong>Your attention capacity degraded with every swipe.</strong> Each post demanded a rapid evaluation — is this worth my time? — then an immediate reset for the next one. Repeated enough times, this trains your brain to expect nothing to require sustained focus.</span></li>
+      <li><span class="mech-icon">🎯</span><span class="mech-text"><strong>The content mix was deliberate.</strong> Cute content lowered your guard. Alarming content spiked your engagement. Alternating between the two kept you emotionally off-balance — scrolling to resolve a tension that the feed is specifically designed to never let resolve.</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- LEAVE WITH -->
+<section class="leave-section" id="leaveWith" style="display:none;">
+  <div class="divider" style="margin-bottom:5rem;"></div>
+  <div class="section-label">Leave With · Know Your State</div>
+  <h2>Save this.<br>Send it to someone.</h2>
+  <p>This is the chain. Every time you open an app, this can happen to your body — in order, in real time. Knowing it doesn't make you immune. But it makes you a witness to your own experience instead of just a passenger in it.</p>
+
+  <div class="wallpaper-card">
+    <div class="wallpaper-title">ON OUR TERMS · YOUR BODY ON THE ALGORITHM</div>
+    <div class="chain">
+      <div class="chain-item">
+        <div class="chain-left"><div class="chain-dot"></div><div class="chain-line"></div></div>
+        <div class="chain-content">
+          <div class="chain-label">Cortisol spike</div>
+          <div class="chain-desc">Negative or alarming content triggers your threat response. Your body thinks something is wrong.</div>
+        </div>
+      </div>
+      <div class="chain-item">
+        <div class="chain-left"><div class="chain-dot"></div><div class="chain-line"></div></div>
+        <div class="chain-content">
+          <div class="chain-label">Dopamine loop</div>
+          <div class="chain-desc">Uncertain rewards — likes, notifications, the next post — keep you anticipating. You chase the maybe.</div>
+        </div>
+      </div>
+      <div class="chain-item">
+        <div class="chain-left"><div class="chain-dot"></div><div class="chain-line"></div></div>
+        <div class="chain-content">
+          <div class="chain-label">Nervous system activation</div>
+          <div class="chain-desc">Outrage + excitement + anxiety stack up. Your body stays on alert long after the phone goes down.</div>
+        </div>
+      </div>
+      <div class="chain-item">
+        <div class="chain-left"><div class="chain-dot"></div><div class="chain-line"></div></div>
+        <div class="chain-content">
+          <div class="chain-label">Attention fragmentation</div>
+          <div class="chain-desc">Rapid context-switching degrades your capacity for sustained focus. This is structural, not personal.</div>
+        </div>
+      </div>
+      <div class="chain-item">
+        <div class="chain-left"><div class="chain-dot"></div></div>
+        <div class="chain-content">
+          <div class="chain-label">Decision degradation</div>
+          <div class="chain-desc">A brain in this state is measurably worse at reading, evaluating, and deciding. This is exactly when you're asked to click "I Agree."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-questions">
+    <div class="section-label" style="margin-bottom:1rem;">The Two Questions · Use them every time</div>
+    <div class="question-prompt">Before you open an app:<br><span>"What am I actually looking for right now?"</span></div>
+    <div class="question-prompt after">After you close it:<br><span>"Did I find it?"</span></div>
+    <p style="font-size:0.75rem; margin-top:0.5rem;">Two questions. No tracker, no commitment. Just the habit of being a witness to your own attention.</p>
+  </div>
+
+  <div class="next-mission">
+    <div class="next-label">UP NEXT</div>
+    <div class="next-title">Module 02:<br><span>This Isn't Accidental</span></div>
+    <p class="next-sub">The people who built these systems knew exactly what they were doing. Some of them have said so publicly. Time to meet them.</p>
+    <a href="#" class="next-btn">Start Module 02 →</a>
+  </div>
+</section>
+
+<div class="disclaimer">
+  <strong>On Our Terms</strong> is free, always. No accounts, no tracking, no ads. · <a href="module-0.html" style="color: var(--accent); text-decoration:none;">← Back to Module 00</a>
+</div>
+
+<script>
+  let interactions = 0;
+  let scrollEvts = 0;
+  let cortisol = 8;
+  let dopamine = 10;
+  let attention = 100;
+  let stress = 5;
+  let evtIdx = 0;
+  let curtainReady = false;
+
+  const eventData = [
+    { c:28, d:32, a:94, s:22, text:"⚡ Threatening content detected. <strong>Cortisol rising</strong> — threat response activated.", cls:'' },
+    { c:38, d:58, a:86, s:38, text:"🎰 Interaction registered. <strong>Dopamine anticipating</strong> — will others respond?", cls:'dopamine-event' },
+    { c:50, d:42, a:78, s:50, text:"📜 Scroll continues. <strong>No stopping point found.</strong> Infinite scroll doing its job.", cls:'attention-event' },
+    { c:58, d:68, a:68, s:60, text:"🔁 Variable reward loop reinforced. <strong>The maybe keeps you going.</strong>", cls:'dopamine-event' },
+    { c:65, d:52, a:57, s:70, text:"🧠 Rapid context switches accumulating. <strong>Attention window narrowing.</strong>", cls:'attention-event' },
+    { c:74, d:74, a:47, s:80, text:"⚠️ Cortisol + dopamine loop running simultaneously. <strong>Nervous system fully engaged.</strong>", cls:'' },
+  ];
+
+  const eventEls = [document.getElementById('event0'), document.getElementById('event1'), document.getElementById('event2')];
+
+  function pushEvent(data) {
+    cortisol = data.c; dopamine = data.d; attention = data.a; stress = data.s;
+    updateMeters();
+    const slot = evtIdx % 3;
+    const el = eventEls[slot];
+    el.className = 'brain-event ' + data.cls;
+    el.innerHTML = data.text;
+    setTimeout(() => el.classList.add('show'), 50);
+    evtIdx++;
+    if (evtIdx >= eventData.length && !curtainReady) {
+      curtainReady = true;
+      setTimeout(() => document.getElementById('curtainBtn').classList.add('show'), 600);
+    }
+  }
+
+  function triggerNextEvent() {
+    if (evtIdx < eventData.length) pushEvent(eventData[evtIdx]);
+  }
+
+  function updateMeters() {
+    document.getElementById('cortisolMeter').style.width = cortisol + '%';
+    document.getElementById('dopamineMeter').style.width = dopamine + '%';
+    document.getElementById('attentionMeter').style.width = attention + '%';
+    document.getElementById('stressMeter').style.width = stress + '%';
+    document.getElementById('cortisolVal').textContent = cortisol < 20 ? 'baseline' : cortisol < 45 ? 'elevated' : cortisol < 65 ? 'high' : 'very high';
+    document.getElementById('dopamineVal').textContent = dopamine < 20 ? 'baseline' : dopamine < 45 ? 'anticipating' : dopamine < 65 ? 'looping' : 'hooked';
+    document.getElementById('attentionVal').textContent = attention + '%';
+    document.getElementById('stressVal').textContent = stress < 20 ? 'low' : stress < 45 ? 'moderate' : stress < 65 ? 'activated' : 'high';
+  }
+
+  function interact(type, id, btn) {
+    interactions++;
+    document.getElementById('interactCount').textContent = interactions;
+    if (type === 'like') btn.classList.toggle('liked');
+    if (type === 'share') { btn.classList.add('shared'); setTimeout(() => btn.classList.remove('shared'), 800); }
+    triggerNextEvent();
+  }
+
+  document.getElementById('feedScroll').addEventListener('scroll', function() {
+    scrollEvts++;
+    document.getElementById('scrollCount').textContent = scrollEvts;
+    if (scrollEvts % 2 === 0) triggerNextEvent();
+  });
+
+  function pullCurtain() {
+    document.getElementById('curtainReveal').classList.add('show');
+    document.getElementById('leaveWith').style.display = 'block';
+    setTimeout(() => document.getElementById('curtainReveal').scrollIntoView({ behavior:'smooth', block:'start' }), 100);
+  }
+
+  updateMeters();
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        if (e.target.id === 'bar2004') {
+          setTimeout(() => { document.getElementById('bar2004').style.width = '100%'; }, 300);
+          setTimeout(() => { document.getElementById('barNow').style.width = '31%'; }, 500);
+        }
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal, .science-card').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
